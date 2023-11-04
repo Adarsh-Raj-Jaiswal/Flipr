@@ -13,3 +13,22 @@ exports.addCustomer = async (req, res, next) => {
     customer,
   });
 };
+exports.getCustomerHavingShipment = async (req, res, next) => {
+  const { city } = req.body;
+  res.json({
+    success: true,
+    city,
+  });
+};
+exports.getAllCustomerOrders = async (req, res, next) => {
+  res.json({
+    success: true,
+    message: "orders",
+  });
+};
+exports.getAllCustomerOrdersAndShipment = async (req, res, next) => {
+  res.json({
+    success: true,
+    message: "ordersAndShipment",
+  });
+};
