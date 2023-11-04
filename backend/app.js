@@ -19,8 +19,10 @@ app.use(
 
 // loading Router
 const customer = require("./routes/customerRoute");
+const order = require("./routes/orderRoute");
 // adding a path specific middleware -> app.use([path],middleware)
 app.use("/api/v1", customer);
+app.use("/api/v1", order);
 // // error handling middleware
 // app.use(errorMiddleware); // By placing this error handling middleware at the end of your middleware stack, Express.js will invoke it whenever an error occurs in any previous middleware or route handler // remember to place this error handling middleware after all your other middleware and route handlers to ensure that it catches any errors that occur throughout the application.
 
