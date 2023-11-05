@@ -1,6 +1,6 @@
 const Shipping = require("../models/shippingModel");
-
-exports.createShipment = async (req, res, next) => {
+const catchAsyncErrors = require("../middleware/catchAsyncErrors");
+exports.createShipment = catchAsyncErrors(async (req, res, next) => {
   const { address, city, pincode, orderId, customerId } = req.body;
   const shipping = await Shipping.create({
     address,
@@ -13,4 +13,4 @@ exports.createShipment = async (req, res, next) => {
     success: true,
     shipping,
   });
-};
+});

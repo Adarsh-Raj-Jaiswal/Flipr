@@ -1,5 +1,6 @@
 const Order = require("../models/orderModel");
-exports.createOrder = async (req, res, next) => {
+const catchAsyncErrors = require("../middleware/catchAsyncErrors");
+exports.createOrder = catchAsyncErrors(async (req, res, next) => {
   const { name, quantity, price, mrp, customerId } = req.body;
 
   if (price > mrp) {
@@ -21,4 +22,4 @@ exports.createOrder = async (req, res, next) => {
     success: true,
     order,
   });
-};
+});

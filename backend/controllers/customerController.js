@@ -1,6 +1,7 @@
 const Customer = require("../models/customerModel");
 const Shipment = require("../models/shippingModel");
-exports.addCustomer = async (req, res, next) => {
+const catchAsyncErrors = require("../middleware/catchAsyncErrors");
+exports.addCustomer = catchAsyncErrors(async (req, res, next) => {
   const { name, email, number, city } = req.body;
 
   const customer = await Customer.create({
@@ -13,8 +14,8 @@ exports.addCustomer = async (req, res, next) => {
     success: true,
     customer,
   });
-};
-exports.getCustomerHavingShipment = async (req, res, next) => {
+});
+exports.getCustomerHavingShipment = catchAsyncErrors(async (req, res, next) => {
   const { city } = req.body;
 
   const shipments = await Shipment.find({ city: city }).populate("customerId");
@@ -27,8 +28,8 @@ exports.getCustomerHavingShipment = async (req, res, next) => {
     success: true,
     shipments,
   });
-};
-exports.getAllCustomerOrders = async (req, res, next) => {
+});
+exports.getAllCustomerOrders = catchAsyncErrors(async (req, res, next) => {
   const customers = await Customer.aggregate([
     {
       $lookup: {
@@ -43,28 +44,30 @@ exports.getAllCustomerOrders = async (req, res, next) => {
     success: true,
     customers,
   });
-};
-exports.getAllCustomerOrdersAndShipment = async (req, res, next) => {
-  const customers = await Customer.aggregate([
-    {
-      $lookup: {
-        from: "orders",
-        localField: "_id",
-        foreignField: "customerId",
-        as: "purchaseOrder",
+});
+exports.getAllCustomerOrdersAndShipment = catchAsyncErrors(
+  async (req, res, next) => {
+    const customers = await Customer.aggregate([
+      {
+        $lookup: {
+          from: "orders",
+          localField: "_id",
+          foreignField: "customerId",
+          as: "purchaseOrder",
+        },
       },
-    },
-    {
-      $lookup: {
-        from: "shipments",
-        localField: "_id",
-        foreignField: "customerId",
-        as: "shipmentDetail",
+      {
+        $lookup: {
+          from: "shipments",
+          localField: "_id",
+          foreignField: "customerId",
+          as: "shipmentDetail",
+        },
       },
-    },
-  ]);
-  res.status(200).json({
-    success: true,
-    customers,
-  });
-};
+    ]);
+    res.status(200).json({
+      success: true,
+      customers,
+    });
+  }
+);
