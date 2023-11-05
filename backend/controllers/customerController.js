@@ -32,17 +32,12 @@ exports.getAllCustomerOrders = async (req, res, next) => {
   const customers = await Customer.aggregate([
     {
       $lookup: {
-        from: "Order",
+        from: "orders",
         localField: "_id",
         foreignField: "customerId",
         as: "purchaseOrders",
       },
     },
-    // {
-    //   $match: {
-    //     "purchaseOrders.0": { $exists: true },
-    //   },
-    // },
   ]);
   res.status(200).json({
     success: true,
@@ -50,8 +45,26 @@ exports.getAllCustomerOrders = async (req, res, next) => {
   });
 };
 exports.getAllCustomerOrdersAndShipment = async (req, res, next) => {
-  res.json({
+  const customers = await Customer.aggregate([
+    {
+      $lookup: {
+        from: "orders",
+        localField: "_id",
+        foreignField: "customerId",
+        as: "purchaseOrder",
+      },
+    },
+    {
+      $lookup: {
+        from: "shipments",
+        localField: "_id",
+        foreignField: "customerId",
+        as: "shipmentDetail",
+      },
+    },
+  ]);
+  res.status(200).json({
     success: true,
-    message: "ordersAndShipment",
+    customers,
   });
 };
