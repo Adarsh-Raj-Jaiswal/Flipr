@@ -23,15 +23,30 @@ exports.getCustomerHavingShipment = async (req, res, next) => {
     (shipment) => shipment.customerId
   );
 
-  res.json({
+  res.status(200).json({
     success: true,
     shipments,
   });
 };
 exports.getAllCustomerOrders = async (req, res, next) => {
-  res.json({
+  const customers = await Customer.aggregate([
+    {
+      $lookup: {
+        from: "Order",
+        localField: "_id",
+        foreignField: "customerId",
+        as: "purchaseOrders",
+      },
+    },
+    // {
+    //   $match: {
+    //     "purchaseOrders.0": { $exists: true },
+    //   },
+    // },
+  ]);
+  res.status(200).json({
     success: true,
-    message: "orders",
+    customers,
   });
 };
 exports.getAllCustomerOrdersAndShipment = async (req, res, next) => {
