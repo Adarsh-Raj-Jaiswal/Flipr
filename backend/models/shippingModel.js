@@ -23,4 +23,4 @@ const shippingSchema = new mongoose.Schema({
     required: true,
   },
 });
-module.exports = mongoose.model("Shipping", shippingSchema);
+module.exports = mongoose.model("Shipment", shippingSchema);

@@ -1,4 +1,5 @@
 const Customer = require("../models/customerModel");
+const Shipment = require("../models/shippingModel");
 exports.addCustomer = async (req, res, next) => {
   const { name, email, number, city } = req.body;
 
@@ -15,9 +16,16 @@ exports.addCustomer = async (req, res, next) => {
 };
 exports.getCustomerHavingShipment = async (req, res, next) => {
   const { city } = req.body;
+
+  const shipments = await Shipment.find({ city: city }).populate("customerId");
+
+  const userWithShipmentsInCity = shipments.map(
+    (shipment) => shipment.customerId
+  );
+
   res.json({
     success: true,
-    city,
+    shipments,
   });
 };
 exports.getAllCustomerOrders = async (req, res, next) => {
